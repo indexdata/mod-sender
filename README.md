@@ -9,7 +9,7 @@ Version 2.0. See the file "[LICENSE](LICENSE)" for more information.
 
 The module acts as an intermediary that sorts the prepared messages, sends them through the appropriate delivery channels. All technical
 complexity, sending queues, persistence of messages, available sending channels will be regulated by this module. Module provide single
-REST endpoint - POST /message-delivery for deliver message by using available delivery channels.
+REST endpoint - POST /message-delivery for delivering message by using available delivery channels.
 
 # Additional information
 
