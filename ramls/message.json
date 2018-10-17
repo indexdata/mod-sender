@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "description": "Message",
+  "additionalProperties": false,
+  "properties": {
+    "notificationId": {
+      "type": "string",
+      "description": "Notification id"
+    },
+    "channels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "$ref": "deliveryChannel.json"
+      }
+    },
+    "header": {
+      "type": "string",
+      "description": "Message header"
+    },
+    "body": {
+      "type": "string",
+      "description": "Message body"
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "$ref": "attachment.json"
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "$ref": "raml-util/schemas/metadata.schema"
+    }
+  },
+  "required": [
+    "notificationId",
+    "channels"
+  ]
+}
