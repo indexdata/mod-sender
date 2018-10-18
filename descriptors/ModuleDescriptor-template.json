@@ -3,7 +3,7 @@
   "name": "Mod sender",
   "provides": [
     {
-      "id": "${artifactId}",
+      "id": "message-delivery",
       "version": "1.0",
       "handlers": [
         {
