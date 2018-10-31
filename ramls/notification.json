@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
-  "description": "Message",
+  "description": "Notification",
   "additionalProperties": false,
   "properties": {
     "notificationId": {
@@ -13,21 +13,6 @@
       "items": {
         "type": "object",
         "$ref": "deliveryChannel.json"
-      }
-    },
-    "header": {
-      "type": "string",
-      "description": "Message header"
-    },
-    "body": {
-      "type": "string",
-      "description": "Message body"
-    },
-    "attachments": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "$ref": "attachment.json"
       }
     },
     "metadata": {

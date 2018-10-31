@@ -1,0 +1,29 @@
+{
+  "notificationId": "1",
+  "channels": [
+    {
+      "type": "email",
+      "from": "admin@folio.org",
+      "to": "user@folio.org",
+      "header": "FOLIO account Password change",
+      "body": "Reset password notification",
+      "attachments": [
+        {
+          "contentType": "image/jpeg",
+          "name": "image name",
+          "description": "image description",
+          "data": "imagedata",
+          "disposition": "inline",
+          "contentId": "<image1@example.com>"
+        }
+      ]
+    },
+    {
+      "type": "sms",
+      "from": "5566",
+      "to": "+3809347047047",
+      "header": "FOLIO account Password change",
+      "body": "Reset password notification"
+    }
+  ]
+}

@@ -10,7 +10,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.http.HttpStatus;
-import org.folio.rest.jaxrs.model.Message;
+import org.folio.rest.jaxrs.model.Notification;
 import org.folio.rest.tools.utils.NetworkUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -53,12 +53,12 @@ public class RestVerticleTest {
   @Test
   public void testGetTemplateStub(TestContext context) {
     //TODO Replace testing stub
-    Message message = new Message()
+    Notification notification = new Notification()
       .withNotificationId(UUID.randomUUID().toString())
       .withChannels(Collections.emptyList());
     RestAssured.given()
       .spec(spec)
-      .body(toJson(message))
+      .body(toJson(notification))
       .when()
       .post(MESSAGE_DELIVERY_PATH)
       .then()

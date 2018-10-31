@@ -9,7 +9,7 @@
         {
           "methods": ["POST"],
           "pathPattern": "/message-delivery",
-          "permissionsRequired": ["message-delivery"]
+          "permissionsRequired": ["sender.message-delivery"]
         }
       ]
     },
@@ -29,7 +29,7 @@
   ],
   "permissionSets": [
     {
-      "permissionName": "message-delivery",
+      "permissionName": "sender.message-delivery",
       "displayName": "Message delivery",
       "description": "Send message"
     }

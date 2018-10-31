@@ -15,6 +15,21 @@
     "to": {
       "type": "string",
       "description": "Message receiver"
+    },
+    "header": {
+      "type": "string",
+      "description": "Message header"
+    },
+    "body": {
+      "type": "string",
+      "description": "Message body"
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "$ref": "attachment.json"
+      }
     }
   },
   "required": [
