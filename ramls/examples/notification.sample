@@ -1,27 +1,18 @@
 {
-  "notificationId": "1",
+  "notificationId": "c276e2ed-cc4b-4e3f-ad36-91aa3a4f4c2a",
   "recipientUserId": "33c59afd-9970-4205-9198-84eba036d105",
   "messages": [
     {
       "deliveryChannel": "email",
-      "header": "FOLIO account Password change",
-      "body": "Reset password notification",
-      "outputFormat": "text/plain",
-      "attachments": [
-        {
-          "contentType": "image/jpeg",
-          "name": "image name",
-          "description": "image description",
-          "data": "imagedata",
-          "disposition": "inline",
-          "contentId": "<image1@example.com>"
-        }
-      ]
+      "header": "Your Folio password changed",
+      "body": "Dear Alex,\n\nYour password has been changed.",
+      "outputFormat": "text/plain"
     },
     {
       "type": "sms",
-      "header": "FOLIO account Password change",
-      "body": "Reset password notification"
+      "header": "Your Folio password changed",
+      "body": "Dear Alex, Your password has been changed.",
+      "outputFormat": "text/plain"
     }
   ]
 }
