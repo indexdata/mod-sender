@@ -147,7 +147,8 @@ public class MessageDeliveryTest {
       .then()
       .statusCode(HttpStatus.SC_NO_CONTENT);
 
-    WireMock.verify(1, WireMock.getRequestedFor(WireMock.urlMatching("/users" + mockRecipient.getId())));
+    WireMock.verify(1, WireMock.getRequestedFor(
+      WireMock.urlMatching("/users/" + mockRecipient.getId())));
   }
 
   private String toJson(Object object) {
