@@ -1,44 +1,78 @@
 package org.folio.sender;
 
+import io.vertx.core.Future;
 import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.JsonObject;
-import org.folio.rest.jaxrs.model.Channel;
+import io.vertx.ext.web.client.HttpRequest;
+import io.vertx.ext.web.client.HttpResponse;
+import io.vertx.ext.web.client.WebClient;
+import org.apache.http.HttpStatus;
+import org.folio.rest.jaxrs.model.Message;
 import org.folio.rest.jaxrs.model.Notification;
+import org.folio.rest.jaxrs.model.User;
 import org.folio.rest.model.OkapiHeaders;
 import org.folio.sender.delivery.DeliveryChannel;
-import org.folio.sender.util.SenderHelper;
+import org.folio.sender.delivery.factory.DeliveryChannelFactory;
+import org.folio.sender.delivery.factory.DeliveryChannelFactoryImpl;
 
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
-import java.util.Map;
 
 public class SenderServiceImpl implements SenderService {
 
   private Vertx vertx;
-  private Map<String, String> deliveryChannelAddressesMap;
+  private DeliveryChannelFactory deliveryChannelFactory;
 
   public SenderServiceImpl(Vertx vertx) {
     this.vertx = vertx;
-    deliveryChannelAddressesMap = vertx.sharedData().getLocalMap(SenderHelper.DELIVERY_CHANNELS_LOCAL_MAP);
+    deliveryChannelFactory = new DeliveryChannelFactoryImpl(vertx);
   }
 
-  public void sendNotification(Notification notification, OkapiHeaders okapiHeaders) {
-    validateDeliveryChannels(notification.getChannels());
-    for (Channel channel : notification.getChannels()) {
-      String deliveryChannelAddress = deliveryChannelAddressesMap.get(channel.getType());
-      DeliveryChannel deliveryChannelProxy = DeliveryChannel.createProxy(vertx, deliveryChannelAddress);
-      deliveryChannelProxy.deliverMessage(notification.getNotificationId(),
-        JsonObject.mapFrom(channel), JsonObject.mapFrom(okapiHeaders));
-    }
+  public Future<Void> sendNotification(Notification notification, OkapiHeaders okapiHeaders) {
+    validateDeliveryChannels(notification.getMessages());
+    return lookupUser(notification.getRecipientUserId(), okapiHeaders)
+      .compose(user -> {
+        for (Message message : notification.getMessages()) {
+          DeliveryChannel deliveryChannelProxy = deliveryChannelFactory.createProxy(message.getDeliveryChannel());
+          deliveryChannelProxy.deliverMessage(notification.getNotificationId(), JsonObject.mapFrom(user),
+            JsonObject.mapFrom(message), JsonObject.mapFrom(okapiHeaders));
+        }
+        return Future.succeededFuture();
+      });
   }
 
-  private void validateDeliveryChannels(List<Channel> deliveryChannels) {
-    for (Channel channel : deliveryChannels) {
-      boolean deliveryChannelIsSupported = deliveryChannelAddressesMap.containsKey(channel.getType());
-      if (!deliveryChannelIsSupported) {
-        String errorMessage = String.format("Delivery channel '%s' is not supported", channel.getType());
-        throw new IllegalStateException(errorMessage);
+  private void validateDeliveryChannels(List<Message> messages) {
+    for (Message message : messages) {
+      if (!deliveryChannelFactory.supportsDeliveryChannel(message.getDeliveryChannel())) {
+        String errorMessage = String.format("Delivery channel '%s' is not supported", message.getDeliveryChannel());
+        throw new BadRequestException(errorMessage);
       }
     }
+  }
+
+  private Future<User> lookupUser(String userId, OkapiHeaders okapiHeaders) {
+    WebClient webClient = WebClient.create(vertx);
+    String url = okapiHeaders.getOkapiUrl() + "/users/" + userId;
+    HttpRequest<Buffer> request = webClient.getAbs(url);
+    okapiHeaders.fillRequestHeaders(request.headers());
+    request.putHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
+
+    Future<HttpResponse<Buffer>> httpResponseFuture = Future.future();
+    request.send(httpResponseFuture);
+    return httpResponseFuture.map(response -> {
+      switch (response.statusCode()) {
+        case HttpStatus.SC_OK:
+          return response.bodyAsJson(User.class);
+        case HttpStatus.SC_NOT_FOUND:
+          throw new BadRequestException(response.bodyAsString());
+        default:
+          throw new InternalServerErrorException();
+      }
+    });
   }
 }
 

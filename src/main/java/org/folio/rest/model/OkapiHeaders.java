@@ -17,9 +17,12 @@ public class OkapiHeaders {
   private String tenant;
   private String okapiUrl;
 
+  public OkapiHeaders() {
+  }
+
   public OkapiHeaders(Map<String, String> headers) {
-    token = TenantTool.calculateTenantId(headers.get(RestVerticle.OKAPI_HEADER_TOKEN));
-    tenant = headers.get(RestVerticle.OKAPI_HEADER_TENANT);
+    token = headers.get(RestVerticle.OKAPI_HEADER_TOKEN);
+    tenant = TenantTool.calculateTenantId(headers.get(RestVerticle.OKAPI_HEADER_TENANT));
     okapiUrl = headers.get(OKAPI_URL);
   }
 
@@ -27,17 +30,35 @@ public class OkapiHeaders {
     return token;
   }
 
+  public void setToken(String token) {
+    this.token = token;
+  }
+
   public String getTenant() {
     return tenant;
+  }
+
+  public void setTenant(String tenant) {
+    this.tenant = tenant;
   }
 
   public String getOkapiUrl() {
     return okapiUrl;
   }
 
+  public void setOkapiUrl(String okapiUrl) {
+    this.okapiUrl = okapiUrl;
+  }
+
   public void fillRequestHeaders(MultiMap headers) {
-    headers.add(RestVerticle.OKAPI_HEADER_TOKEN, token);
-    headers.add(RestVerticle.OKAPI_HEADER_TENANT, tenant);
-    headers.add(OKAPI_URL, okapiUrl);
+    if (token != null) {
+      headers.add(RestVerticle.OKAPI_HEADER_TOKEN, token);
+    }
+    if (tenant != null) {
+      headers.add(RestVerticle.OKAPI_HEADER_TENANT, tenant);
+    }
+    if (okapiUrl != null) {
+      headers.add(OKAPI_URL, okapiUrl);
+    }
   }
 }

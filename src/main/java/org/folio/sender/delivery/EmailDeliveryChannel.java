@@ -8,8 +8,9 @@ import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.client.HttpRequest;
 import io.vertx.ext.web.client.WebClient;
 import org.apache.http.HttpStatus;
+import org.folio.rest.jaxrs.model.EmailEntity;
+import org.folio.rest.jaxrs.model.User;
 import org.folio.rest.model.OkapiHeaders;
-import org.folio.sender.delivery.model.EmailEntity;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -17,34 +18,42 @@ import javax.ws.rs.core.MediaType;
 public class EmailDeliveryChannel implements DeliveryChannel {
 
   public static final Logger LOG = LoggerFactory.getLogger(EmailDeliveryChannel.class);
-  private static final String EMAIL_PATH = "/email";
 
   private WebClient webClient;
+  private String emailUrlPath;
 
-  public EmailDeliveryChannel(Vertx vertx) {
+  public EmailDeliveryChannel(Vertx vertx, String emailUrlPath) {
     webClient = WebClient.create(vertx);
+    this.emailUrlPath = emailUrlPath;
   }
 
   @Override
-  public void deliverMessage(String notificationId, JsonObject message, JsonObject okapiHeadersJson) {
-    EmailEntity emailEntity = message.mapTo(EmailEntity.class);
-    emailEntity.setNotificationId(notificationId);
+  public void deliverMessage(String notificationId, JsonObject recipientJson,
+                             JsonObject message, JsonObject okapiHeadersJson) {
+    try {
+      User recipient = recipientJson.mapTo(User.class);
+      EmailEntity emailEntity = message.mapTo(EmailEntity.class);
+      emailEntity.setNotificationId(notificationId);
+      emailEntity.setTo(recipient.getPersonal().getEmail());
 
-    OkapiHeaders okapiHeaders = okapiHeadersJson.mapTo(OkapiHeaders.class);
-    String url = okapiHeaders.getOkapiUrl() + EMAIL_PATH;
-    HttpRequest<Buffer> request = webClient.postAbs(url);
-    okapiHeaders.fillRequestHeaders(request.headers());
-    request.putHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
-    request.putHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
+      OkapiHeaders okapiHeaders = okapiHeadersJson.mapTo(OkapiHeaders.class);
+      String url = okapiHeaders.getOkapiUrl() + emailUrlPath;
+      HttpRequest<Buffer> request = webClient.postAbs(url);
+      okapiHeaders.fillRequestHeaders(request.headers());
+      request.putHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+      request.putHeader(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN);
 
-    request.send(response -> {
-      if (response.failed()) {
-        LOG.error(response.cause().getMessage(), response.cause());
-      } else if (response.result().statusCode() != HttpStatus.SC_OK) {
-        String errorMessage = String.format("Email module responded with status '%s' and body '%s'",
-          response.result().statusCode(), response.result().bodyAsString());
-        LOG.error(errorMessage);
-      }
-    });
+      request.sendJson(emailEntity, response -> {
+        if (response.failed()) {
+          LOG.error(response.cause().getMessage(), response.cause());
+        } else if (response.result().statusCode() != HttpStatus.SC_OK) {
+          String errorMessage = String.format("Email module responded with status '%s' and body '%s'",
+            response.result().statusCode(), response.result().bodyAsString());
+          LOG.error(errorMessage);
+        }
+      });
+    } catch (Exception e) {
+      LOG.error(e.getMessage(), e);
+    }
   }
 }

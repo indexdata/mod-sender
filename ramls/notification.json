@@ -8,20 +8,21 @@
       "type": "string",
       "description": "Notification id"
     },
-    "channels": {
+    "recipientUserId": {
+      "type": "string",
+      "description": "Recipient user id"
+    },
+    "messages": {
       "type": "array",
       "items": {
         "type": "object",
-        "$ref": "deliveryChannel.json"
+        "$ref": "message.json"
       }
-    },
-    "metadata": {
-      "type": "object",
-      "$ref": "raml-util/schemas/metadata.schema"
     }
   },
   "required": [
     "notificationId",
-    "channels"
+    "recipientUserId",
+    "messages"
   ]
 }

@@ -9,7 +9,8 @@
         {
           "methods": ["POST"],
           "pathPattern": "/message-delivery",
-          "permissionsRequired": ["sender.message-delivery"]
+          "permissionsRequired": ["sender.message-delivery"],
+          "modulePermissions": ["email.message.post", "users.item.get" ]
         }
       ]
     },

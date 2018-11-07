@@ -4,20 +4,19 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import org.apache.http.HttpStatus;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-public final class SenderHelper {
+public final class ExceptionHelper {
 
   private static final Logger LOG = LoggerFactory.getLogger("mod-sender");
 
-  public static final String DELIVERY_CHANNELS_LOCAL_MAP = "delivery-channel.map";
-
-  private SenderHelper() {
+  private ExceptionHelper() {
   }
 
   public static Response mapExceptionToResponse(Throwable throwable) {
-    if (throwable instanceof IllegalStateException) {
+    if (throwable.getClass() == BadRequestException.class) {
       return Response.status(HttpStatus.SC_BAD_REQUEST)
         .type(MediaType.TEXT_PLAIN)
         .entity(throwable.getMessage())
