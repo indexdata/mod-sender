@@ -22,7 +22,6 @@ import org.folio.rest.jaxrs.model.User;
 import org.folio.rest.model.OkapiHeaders;
 import org.folio.rest.tools.utils.NetworkUtils;
 import org.hamcrest.Matchers;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
@@ -77,10 +76,6 @@ public class MessageDeliveryTest {
     vertx.close(context.asyncAssertSuccess());
   }
 
-  @After
-  public void tearDown() throws Exception {
-    mockServer.stop();
-  }
 
   @Test
   public void shouldReturn422WhenInvalidBody() {
@@ -151,6 +146,8 @@ public class MessageDeliveryTest {
       .post(MESSAGE_DELIVERY_PATH)
       .then()
       .statusCode(HttpStatus.SC_NO_CONTENT);
+
+    WireMock.verify(1, WireMock.getRequestedFor(WireMock.urlMatching("/users" + mockRecipient.getId())));
   }
 
   private String toJson(Object object) {

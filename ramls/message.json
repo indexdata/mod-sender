@@ -26,6 +26,7 @@
     },
     "attachments": {
       "type": "array",
+      "description": "Array of message attachments",
       "items": {
         "type": "object",
         "$ref": "attachment.json"
