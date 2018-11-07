@@ -29,7 +29,7 @@ Request body example:
       "outputFormat": "text/plain"
     },
     {
-      "type": "sms",
+      "deliveryChannel": "sms",
       "header": "Your Folio password changed",
       "body": "Dear Alex, Your password has been changed.",
       "outputFormat": "text/plain"
