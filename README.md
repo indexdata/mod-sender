@@ -24,13 +24,13 @@ Request body example:
   "messages": [
     {
       "deliveryChannel": "email",
-      "header": "Your Folio password changed",
+      "header": "Your FOLIO password changed",
       "body": "Dear Alex,\n\nYour password has been changed.",
       "outputFormat": "text/plain"
     },
     {
       "deliveryChannel": "sms",
-      "header": "Your Folio password changed",
+      "header": "Your FOLIO password changed",
       "body": "Dear Alex, Your password has been changed.",
       "outputFormat": "text/plain"
     }

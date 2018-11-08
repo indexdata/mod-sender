@@ -38,11 +38,11 @@ public class MessageDeliveryImpl implements MessageDelivery {
       senderService.sendNotification(entity, headers)
         .map(PostMessageDeliveryResponse.respond204WithTextPlain(StringUtils.EMPTY))
         .map(Response.class::cast)
-        .otherwise(ExceptionHelper::mapExceptionToResponse)
+        .otherwise(ExceptionHelper::handleException)
         .setHandler(asyncResultHandler);
     } catch (Exception e) {
       asyncResultHandler.handle(Future.succeededFuture(
-        ExceptionHelper.mapExceptionToResponse(e)));
+        ExceptionHelper.handleException(e)));
     }
   }
 }

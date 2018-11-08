@@ -6,7 +6,7 @@
   "properties": {
     "deliveryChannel": {
       "type": "string",
-      "description": "Type of channel"
+      "description": "Type of channel; Examples: 'email', 'sms'; Should be supported by the module"
     },
     "from": {
       "type": "string",
@@ -14,7 +14,7 @@
     },
     "outputFormat": {
       "type": "string",
-      "description": "Output format"
+      "description": "Output format of message body"
     },
     "header": {
       "type": "string",

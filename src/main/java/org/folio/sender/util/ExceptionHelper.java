@@ -15,7 +15,7 @@ public final class ExceptionHelper {
   private ExceptionHelper() {
   }
 
-  public static Response mapExceptionToResponse(Throwable throwable) {
+  public static Response handleException(Throwable throwable) {
     if (throwable.getClass() == BadRequestException.class) {
       return Response.status(HttpStatus.SC_BAD_REQUEST)
         .type(MediaType.TEXT_PLAIN)
