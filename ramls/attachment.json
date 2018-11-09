@@ -5,22 +5,28 @@
   "additionalProperties": false,
   "properties": {
     "contentType": {
-      "type": "string"
+      "type": "string",
+      "description": "Content type"
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "description": "Name"
     },
     "description": {
-      "type": "string"
+      "type": "string",
+      "description": "Description"
     },
     "data": {
-      "type": "string"
+      "type": "string",
+      "description": "Attachment data"
     },
     "disposition": {
-      "type": "string"
+      "type": "string",
+      "description": "Disposition"
     },
     "contentId": {
-      "type": "string"
+      "type": "string",
+      "description": "Content id"
     }
   }
 }

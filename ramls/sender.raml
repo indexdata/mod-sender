@@ -5,14 +5,16 @@ baseUri: http://api.example.com/{version}
 version: v1
 
 types:
-  message: !include messageDelivery.json
+  notification: !include notification.json
+  emailEntity: !include email_entity.json
+  user: !include userdata.json
 
 /message-delivery:
   post:
     description: Send prepered notification to delivery channels
     body:
       application/json:
-        type: message
+        type: notification
     responses:
       204:
         body:

@@ -4,16 +4,17 @@
   "description": "Message",
   "additionalProperties": false,
   "properties": {
-    "notificationId": {
+    "deliveryChannel": {
       "type": "string",
-      "description": "Notification id"
+      "description": "Type of channel; Examples: 'email', 'sms'; Should be supported by the module"
     },
-    "channels": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "$ref": "deliveryChannel.json"
-      }
+    "from": {
+      "type": "string",
+      "description": "Message sender"
+    },
+    "outputFormat": {
+      "type": "string",
+      "description": "Output format of message body"
     },
     "header": {
       "type": "string",
@@ -25,18 +26,14 @@
     },
     "attachments": {
       "type": "array",
+      "description": "Array of message attachments",
       "items": {
         "type": "object",
         "$ref": "attachment.json"
       }
-    },
-    "metadata": {
-      "type": "object",
-      "$ref": "raml-util/schemas/metadata.schema"
     }
   },
   "required": [
-    "notificationId",
-    "channels"
+    "deliveryChannel"
   ]
 }
