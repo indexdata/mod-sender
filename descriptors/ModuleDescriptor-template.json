@@ -1,6 +1,16 @@
 {
   "id": "${artifactId}-${version}",
   "name": "Mod sender",
+  "requires": [
+    {
+    "id" : "users",
+    "version" : "15.0"
+    },
+    {
+      "id" : "email",
+      "version" : "1.0"
+    }
+  ],
   "provides": [
     {
       "id": "message-delivery",
