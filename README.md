@@ -55,3 +55,17 @@ See project [MODSENDER](https://issues.folio.org/browse/MODSENDER) at the [FOLIO
 See the built `target/ModuleDescriptor.json` for the interfaces that this module
 requires and provides, the permissions, and the additional module metadata.
 
+### API documentation
+
+This module's [API documentation](https://dev.folio.org/reference/api/#mod-sender).
+
+### Code analysis
+
+[SonarQube analysis](https://sonarcloud.io/dashboard?id=org.folio%3Amod-sender).
+
+### Download and configuration
+
+The built artifacts for this module are available.
+See [configuration](https://dev.folio.org/download/artifacts) for repository access,
+and the [Docker image](https://hub.docker.com/r/folioorg/mod-sender/).
+
