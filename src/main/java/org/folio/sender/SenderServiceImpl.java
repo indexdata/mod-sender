@@ -24,12 +24,12 @@ import java.util.List;
 
 public class SenderServiceImpl implements SenderService {
 
-  private Vertx vertx;
   private DeliveryChannelFactory deliveryChannelFactory;
+  private WebClient webClient;
 
   public SenderServiceImpl(Vertx vertx) {
-    this.vertx = vertx;
-    deliveryChannelFactory = new DeliveryChannelFactoryImpl(vertx);
+    this.deliveryChannelFactory = new DeliveryChannelFactoryImpl(vertx);
+    this.webClient = vertx.getOrCreateContext().get("httpClient");
   }
 
   public Future<Void> sendNotification(Notification notification, OkapiHeaders okapiHeaders) {
@@ -55,7 +55,6 @@ public class SenderServiceImpl implements SenderService {
   }
 
   private Future<User> lookupUser(String userId, OkapiHeaders okapiHeaders) {
-    WebClient webClient = WebClient.create(vertx);
     String url = okapiHeaders.getOkapiUrl() + "/users/" + userId;
     HttpRequest<Buffer> request = webClient.getAbs(url);
     okapiHeaders.fillRequestHeaders(request.headers());
