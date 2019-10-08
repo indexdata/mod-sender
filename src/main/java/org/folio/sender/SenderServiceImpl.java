@@ -29,7 +29,7 @@ public class SenderServiceImpl implements SenderService {
 
   public SenderServiceImpl(Vertx vertx) {
     this.deliveryChannelFactory = new DeliveryChannelFactoryImpl(vertx);
-    this.webClient = vertx.getOrCreateContext().get("httpClient");
+    this.webClient = vertx.getOrCreateContext().get("webClient");
   }
 
   public Future<Void> sendNotification(Notification notification, OkapiHeaders okapiHeaders) {
