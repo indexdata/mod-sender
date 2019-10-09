@@ -23,7 +23,7 @@ public class EmailDeliveryChannel implements DeliveryChannel {
   private String emailUrlPath;
 
   public EmailDeliveryChannel(Vertx vertx, String emailUrlPath) {
-    webClient = WebClient.create(vertx);
+    this.webClient = vertx.getOrCreateContext().get("webClient");
     this.emailUrlPath = emailUrlPath;
   }
 
