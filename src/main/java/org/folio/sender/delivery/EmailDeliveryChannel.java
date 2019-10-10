@@ -17,13 +17,13 @@ import javax.ws.rs.core.MediaType;
 
 public class EmailDeliveryChannel implements DeliveryChannel {
 
-  public static final Logger LOG = LoggerFactory.getLogger(EmailDeliveryChannel.class);
+  private static final Logger LOG = LoggerFactory.getLogger(EmailDeliveryChannel.class);
 
   private WebClient webClient;
   private String emailUrlPath;
 
   public EmailDeliveryChannel(Vertx vertx, String emailUrlPath) {
-    this.webClient = vertx.getOrCreateContext().get("webClient");
+    this.webClient = WebClient.create(vertx);
     this.emailUrlPath = emailUrlPath;
   }
 
