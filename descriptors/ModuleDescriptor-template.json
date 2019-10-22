@@ -23,19 +23,6 @@
           "modulePermissions": ["email.message.post", "users.item.get" ]
         }
       ]
-    },
-    {
-      "id": "_tenant",
-      "version": "1.0",
-      "interfaceType": "system",
-      "handlers": [
-        {
-          "methods": [
-            "POST"
-          ],
-          "pathPattern": "/_/tenant"
-        }
-      ]
     }
   ],
   "permissionSets": [
