@@ -1,6 +1,7 @@
 package org.folio.sender;
 
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.JsonObject;
@@ -60,9 +61,9 @@ public class SenderServiceImpl implements SenderService {
     okapiHeaders.fillRequestHeaders(request.headers());
     request.putHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
 
-    Future<HttpResponse<Buffer>> httpResponseFuture = Future.future();
-    request.send(httpResponseFuture);
-    return httpResponseFuture.map(response -> {
+    Promise<HttpResponse<Buffer>> promise = Promise.promise();
+    request.send(promise);
+    return promise.future().map(response -> {
       switch (response.statusCode()) {
         case HttpStatus.SC_OK:
           return response.bodyAsJson(User.class);
