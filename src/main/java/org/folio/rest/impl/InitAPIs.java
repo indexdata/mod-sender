@@ -1,9 +1,14 @@
 package org.folio.rest.impl;
 
-import io.vertx.core.*;
-import io.vertx.ext.web.client.WebClient;
 import org.folio.rest.resource.interfaces.InitAPI;
 import org.folio.sender.DeliveryVerticle;
+
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Context;
+import io.vertx.core.Handler;
+import io.vertx.core.Promise;
+import io.vertx.core.Vertx;
+import io.vertx.ext.web.client.WebClient;
 
 
 public class InitAPIs implements InitAPI {
@@ -12,6 +17,6 @@ public class InitAPIs implements InitAPI {
     context.put("webClient", WebClient.create(vertx));
     Promise<String> promise = Promise.promise();
     vertx.deployVerticle(new DeliveryVerticle(), promise);
-    promise.future().map(true).setHandler(resultHandler);
+    promise.future().map(true).onComplete(resultHandler);
   }
 }
