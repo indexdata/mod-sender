@@ -1,3 +1,6 @@
+## 2020-06-11 v1.3.0
+ * MODSENDER-28 Update RMB version to 30.0.2 and Vertx to 3.9.1
+
 ## 2019-04-12 v1.2.0
  * MODSENDER-24 Update RMB version
  * MODSENDER-23 Use JVM features to manage container memory
