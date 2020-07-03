@@ -15,6 +15,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.http.HttpStatus;
+import org.folio.rest.jaxrs.model.CustomFields;
 import org.folio.rest.jaxrs.model.Message;
 import org.folio.rest.jaxrs.model.Notification;
 import org.folio.rest.jaxrs.model.Personal;
@@ -118,7 +119,9 @@ public class MessageDeliveryTest {
   public void shouldReturnNoContentAndSendEmailWhenRequestIsValid() {
     User mockRecipient = new User()
       .withId(UUID.randomUUID().toString())
-      .withPersonal(new Personal().withEmail("test@test.com"));
+      .withPersonal(new Personal().withEmail("test@test.com"))
+      .withCustomFields(new CustomFields().withAdditionalProperty("Custom field", "value"));
+
     mockUserModule(mockRecipient.getId(), mockRecipient);
     mockEmailModule();
 
