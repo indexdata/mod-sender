@@ -1,3 +1,7 @@
+## 2020-07-13 v1.3.1
+ * Fix notices for patrons with custom fields (MODSENDER-30)
+ * Allow additional fields in user schema (MODSENDER-33)
+
 ## 2020-06-11 v1.3.0
  * MODSENDER-28 Update RMB version to 30.0.2 and Vertx to 3.9.1
 
