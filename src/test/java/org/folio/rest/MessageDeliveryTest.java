@@ -15,6 +15,8 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.http.HttpStatus;
+import org.folio.rest.jaxrs.model.Address;
+import org.folio.rest.jaxrs.model.CustomFields;
 import org.folio.rest.jaxrs.model.Message;
 import org.folio.rest.jaxrs.model.Notification;
 import org.folio.rest.jaxrs.model.Personal;
@@ -31,6 +33,7 @@ import org.junit.runner.RunWith;
 
 import javax.ws.rs.core.MediaType;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.UUID;
 
 @RunWith(VertxUnitRunner.class)
@@ -119,6 +122,51 @@ public class MessageDeliveryTest {
     User mockRecipient = new User()
       .withId(UUID.randomUUID().toString())
       .withPersonal(new Personal().withEmail("test@test.com"));
+
+    mockUserModule(mockRecipient.getId(), mockRecipient);
+    mockEmailModule();
+
+    Message emailChannel1 = new Message()
+      .withDeliveryChannel("email")
+      .withHeader("header1")
+      .withBody("body1")
+      .withOutputFormat(MediaType.TEXT_PLAIN);
+    Message emailChannel2 = new Message()
+      .withDeliveryChannel("email")
+      .withHeader("header2")
+      .withBody("body2")
+      .withOutputFormat(MediaType.TEXT_HTML);
+
+    Notification notification = new Notification()
+      .withNotificationId(UUID.randomUUID().toString())
+      .withRecipientUserId(mockRecipient.getId())
+      .withMessages(Arrays.asList(emailChannel1, emailChannel2));
+
+    RestAssured.given()
+      .spec(spec)
+      .header(mockUrlHeader)
+      .body(toJson(notification))
+      .when()
+      .post(MESSAGE_DELIVERY_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_NO_CONTENT);
+
+    WireMock.verify(1, WireMock.getRequestedFor(
+      WireMock.urlMatching("/users/" + mockRecipient.getId())));
+  }
+
+  @Test
+  public void shouldNotFailWhenUserContainsAdditionalProperties() {
+    User mockRecipient = new User()
+      .withId(UUID.randomUUID().toString())
+      .withCustomFields(new CustomFields().withAdditionalProperty("customField", "value"))
+      .withAdditionalProperty("additionalProperty", "value")
+      .withPersonal(new Personal()
+        .withEmail("test@test.com")
+        .withAdditionalProperty("additionalProperty", "value")
+        .withAddresses(Collections.singletonList(
+          new Address().withAdditionalProperty("additionalProperty", "value"))));
+
     mockUserModule(mockRecipient.getId(), mockRecipient);
     mockEmailModule();
 
