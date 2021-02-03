@@ -1,8 +1,8 @@
 package org.folio.sender.util;
 
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import org.apache.http.HttpStatus;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.core.MediaType;
@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response;
 
 public final class ExceptionHelper {
 
-  private static final Logger LOG = LoggerFactory.getLogger("mod-sender");
+  private static final Logger LOG = LogManager.getLogger("mod-sender");
 
   private ExceptionHelper() {
   }
