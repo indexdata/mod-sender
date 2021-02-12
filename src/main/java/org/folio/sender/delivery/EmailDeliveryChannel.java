@@ -3,11 +3,11 @@ package org.folio.sender.delivery;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.client.HttpRequest;
 import io.vertx.ext.web.client.WebClient;
 import org.apache.http.HttpStatus;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.folio.rest.jaxrs.model.EmailEntity;
 import org.folio.rest.jaxrs.model.User;
 import org.folio.rest.model.OkapiHeaders;
@@ -17,7 +17,7 @@ import javax.ws.rs.core.MediaType;
 
 public class EmailDeliveryChannel implements DeliveryChannel {
 
-  private static final Logger LOG = LoggerFactory.getLogger(EmailDeliveryChannel.class);
+  private static final Logger LOG = LogManager.getLogger(EmailDeliveryChannel.class);
 
   private WebClient webClient;
   private String emailUrlPath;
