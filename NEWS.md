@@ -1,3 +1,6 @@
+## 2020-03-09 v1.5.0
+* Upgrade to RMB v32.1.0 and Vertx 4.0.0 (MODSENDER-37)
+
 ## 2020-10-08 v1.4.0
  * Upgrade to RMB v31.0.2 and JDK11 (MODSENDER-35)
  * Fix notices for patrons with custom fields (MODSENDER-30)
