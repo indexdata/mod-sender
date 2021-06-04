@@ -14,8 +14,8 @@
   </licenses>
 
   <properties>
-    <raml-module-builder.version>32.1.0</raml-module-builder.version>
-    <vertx.version>4.0.0</vertx.version>
+    <raml-module-builder.version>33.0.0</raml-module-builder.version>
+    <vertx.version>4.1.0.CR1</vertx.version>
     <junit.version>4.13.1</junit.version>
     <rest-assured.version>4.3.0</rest-assured.version>
     <ramlfiles_path>${basedir}/ramls</ramlfiles_path>
@@ -154,47 +154,15 @@
       </plugin>
 
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.6.0</version>
+        <groupId>org.folio</groupId>
+        <artifactId>domain-models-maven-plugin</artifactId>
+        <version>${raml-module-builder.version}</version>
         <executions>
           <execution>
             <id>generate_interfaces</id>
-            <phase>generate-sources</phase>
             <goals>
               <goal>java</goal>
             </goals>
-            <configuration>
-              <mainClass>org.folio.rest.tools.GenerateRunner</mainClass>
-              <!-- <executable>java</executable> -->
-              <cleanupDaemonThreads>false</cleanupDaemonThreads>
-              <systemProperties>
-                <systemProperty>
-                  <key>project.basedir</key>
-                  <value>${basedir}</value>
-                </systemProperty>
-                <systemProperty>
-                  <key>raml_files</key>
-                  <value>${ramlfiles_path}</value>
-                </systemProperty>
-              </systemProperties>
-            </configuration>
-          </execution>
-          <execution>
-            <id>git submodule update</id>
-            <phase>initialize</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>git</executable>
-              <arguments>
-                <argument>submodule</argument>
-                <argument>update</argument>
-                <argument>--init</argument>
-                <argument>--recursive</argument>
-              </arguments>
-            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -396,6 +364,14 @@
       <url>https://repository.folio.org/repository/maven-folio</url>
     </repository>
   </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>folio-nexus</id>
+      <name>FOLIO Maven repository</name>
+      <url>https://repository.folio.org/repository/maven-folio</url>
+    </pluginRepository>
+  </pluginRepositories>
 
   <distributionManagement>
     <repository>

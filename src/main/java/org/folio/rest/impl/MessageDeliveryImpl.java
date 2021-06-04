@@ -4,7 +4,7 @@ import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.folio.rest.jaxrs.model.Notification;
 import org.folio.rest.jaxrs.resource.MessageDelivery;
 import org.folio.rest.model.OkapiHeaders;
