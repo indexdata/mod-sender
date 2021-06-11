@@ -1,3 +1,6 @@
+## 2021-06-11 v1.6.0
+ * Upgrade to RMB 33.0.0 and Vertx 4.1.0 (MODSENDER-40)
+
 ## 2020-03-09 v1.5.0
 * Upgrade to RMB v32.1.0 and Vertx 4.0.0 (MODSENDER-37)
 
