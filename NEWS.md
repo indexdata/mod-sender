@@ -1,3 +1,6 @@
+## 2021-12-16 v1.6.1
+ * Upgrade to RMB 33.0.4 and Log4j 2.16.0 (MODSENDER-44)
+
 ## 2021-06-11 v1.6.0
  * Upgrade to RMB 33.0.0 and Vertx 4.1.0 (MODSENDER-40)
 
