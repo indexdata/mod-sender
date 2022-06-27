@@ -1,3 +1,6 @@
+## 2022-06-27 v1.8.0
+* Upgrade to RMB 34.0.0 (MODSENDER-50)
+
 ## 2022-02-23 v1.7.0
  * Upgrade to RMB 33.2.4 (MODSENDER-47)
  * Use new api-lint and api-doc CI facilities (FOLIO-3231)  
