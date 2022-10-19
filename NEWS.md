@@ -1,6 +1,6 @@
-## v1.9.0 IN-PROGRESS
-
+## 2022-10-19 v1.9.0
 * Supports users interface versions 15.0 16.0 (MODSENDER-52)
+* Upgrade to RMB 35.0.0 and Vertx 4.3.3 (MODSENDER-53)
 
 ## 2022-06-27 v1.8.0
 * Upgrade to RMB 34.0.0 (MODSENDER-50)
