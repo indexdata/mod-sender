@@ -1,4 +1,4 @@
-## 2023-02-23 v2.0.0
+## 2023-02-23 v1.10.0
 * Logging improvement - added log4j configuration (MODSENDER-57)
 
 ## 2022-10-19 v1.9.0
