@@ -1,3 +1,6 @@
+## 2023-02-23 v2.0.0
+* Logging improvement - added log4j configuration (MODSENDER-57)
+
 ## 2022-10-19 v1.9.0
 * Supports users interface versions 15.0 16.0 (MODSENDER-52)
 * Upgrade to RMB 35.0.0 and Vertx 4.3.3 (MODSENDER-53)
