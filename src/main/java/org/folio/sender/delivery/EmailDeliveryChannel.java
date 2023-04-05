@@ -30,7 +30,7 @@ public class EmailDeliveryChannel implements DeliveryChannel {
   @Override
   public void deliverMessage(String notificationId, JsonObject recipientJson,
                              JsonObject message, JsonObject okapiHeadersJson) {
-    LOG.info("deliverMessage:: Sending message to recipient {} with message {}", recipientJson, message);
+    LOG.debug("deliverMessage:: Sending message to recipient {} with message {}", recipientJson, message);
     try {
       User recipient = recipientJson.mapTo(User.class);
       EmailEntity emailEntity = message.mapTo(EmailEntity.class);
