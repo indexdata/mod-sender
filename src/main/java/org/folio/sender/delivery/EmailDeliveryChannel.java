@@ -30,6 +30,7 @@ public class EmailDeliveryChannel implements DeliveryChannel {
   @Override
   public void deliverMessage(String notificationId, JsonObject recipientJson,
                              JsonObject message, JsonObject okapiHeadersJson) {
+    LOG.info("deliverMessage:: Sending message to recipient {} with message {}", recipientJson, message);
     try {
       User recipient = recipientJson.mapTo(User.class);
       EmailEntity emailEntity = message.mapTo(EmailEntity.class);
@@ -45,15 +46,15 @@ public class EmailDeliveryChannel implements DeliveryChannel {
 
       request.sendJson(emailEntity, response -> {
         if (response.failed()) {
-          LOG.error(response.cause().getMessage(), response.cause());
+          LOG.error("deliverMessage:: Error from Email module {} ", response.cause().getMessage(), response.cause());
         } else if (response.result().statusCode() != HttpStatus.SC_OK) {
-          String errorMessage = String.format("Email module responded with status '%s' and body '%s'",
+          String errorMessage = String.format("deliverMessage:: Email module responded with status '%s' and body '%s'",
             response.result().statusCode(), response.result().bodyAsString());
           LOG.error(errorMessage);
         }
       });
     } catch (Exception e) {
-      LOG.error(e.getMessage(), e);
+      LOG.error("deliverMessage:: Error while attempting to deliver message to recipient {} ", recipientJson, e);
     }
   }
 }

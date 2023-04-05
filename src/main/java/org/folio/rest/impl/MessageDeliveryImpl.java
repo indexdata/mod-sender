@@ -5,6 +5,8 @@ import java.util.Map;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.folio.rest.jaxrs.model.Notification;
 import org.folio.rest.jaxrs.resource.MessageDelivery;
 import org.folio.rest.model.OkapiHeaders;
@@ -21,6 +23,7 @@ import io.vertx.core.Vertx;
 
 public class MessageDeliveryImpl implements MessageDelivery {
 
+  private static final Logger log = LogManager.getLogger(MessageDeliveryImpl.class);
   private SenderService senderService;
   private String tenantId;
 
@@ -35,6 +38,7 @@ public class MessageDeliveryImpl implements MessageDelivery {
                                   Handler<AsyncResult<Response>> asyncResultHandler,
                                   Context vertxContext) {
     try {
+      log.info("postMessageDelivery:: sending Notification for notificationId {}, recipientUserId {} ", entity.getNotificationId(), entity.getRecipientUserId());
       OkapiHeaders headers = new OkapiHeaders(okapiHeaders);
       headers.setTenant(tenantId);
       senderService.sendNotification(entity, headers)
@@ -43,6 +47,7 @@ public class MessageDeliveryImpl implements MessageDelivery {
         .otherwise(ExceptionHelper::handleException)
         .onComplete(asyncResultHandler);
     } catch (Exception e) {
+      log.warn("postMessageDelivery:: Error in sending Notification for recipientId {}", entity.getRecipientUserId(), e);
       asyncResultHandler.handle(Future.succeededFuture(
         ExceptionHelper.handleException(e)));
     }

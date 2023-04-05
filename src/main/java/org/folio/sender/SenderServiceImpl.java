@@ -9,6 +9,8 @@ import io.vertx.ext.web.client.HttpRequest;
 import io.vertx.ext.web.client.HttpResponse;
 import io.vertx.ext.web.client.WebClient;
 import org.apache.http.HttpStatus;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.folio.rest.jaxrs.model.Message;
 import org.folio.rest.jaxrs.model.Notification;
 import org.folio.rest.jaxrs.model.User;
@@ -25,6 +27,7 @@ import java.util.List;
 
 public class SenderServiceImpl implements SenderService {
 
+  private static final Logger log = LogManager.getLogger(SenderServiceImpl.class);
   private DeliveryChannelFactory deliveryChannelFactory;
   private WebClient webClient;
 
@@ -34,6 +37,7 @@ public class SenderServiceImpl implements SenderService {
   }
 
   public Future<Void> sendNotification(Notification notification, OkapiHeaders okapiHeaders) {
+    log.debug("sendNotification:: notificationId {}, recipientUserId {}", notification.getNotificationId(), notification.getRecipientUserId());
     validateDeliveryChannels(notification.getMessages());
     return lookupUser(notification.getRecipientUserId(), okapiHeaders)
       .compose(user -> {
@@ -47,15 +51,18 @@ public class SenderServiceImpl implements SenderService {
   }
 
   private void validateDeliveryChannels(List<Message> messages) {
+    log.debug("validateDeliveryChannels:: validating messages {} ", messages);
     for (Message message : messages) {
       if (!deliveryChannelFactory.supportsDeliveryChannel(message.getDeliveryChannel())) {
-        String errorMessage = String.format("Delivery channel '%s' is not supported", message.getDeliveryChannel());
+        String errorMessage = String.format("validateDeliveryChannels:: Delivery channel '%s' is not supported", message.getDeliveryChannel());
+        log.warn(errorMessage);
         throw new BadRequestException(errorMessage);
       }
     }
   }
 
   private Future<User> lookupUser(String userId, OkapiHeaders okapiHeaders) {
+    log.debug("lookupUser:: Fetching user details for userId {}", userId);
     String url = okapiHeaders.getOkapiUrl() + "/users/" + userId;
     HttpRequest<Buffer> request = webClient.getAbs(url);
     okapiHeaders.fillRequestHeaders(request.headers());
