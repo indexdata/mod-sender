@@ -199,6 +199,58 @@ public class MessageDeliveryTest {
       WireMock.urlMatching("/users/" + mockRecipient.getId())));
   }
 
+  @Test
+  public void testMessageDeliveryWithInvalidData() {
+    User mockRecipient = new User()
+      .withId(UUID.randomUUID().toString())
+      .withCustomFields(new CustomFields().withAdditionalProperty("customField", "value"))
+      .withAdditionalProperty("additionalProperty", "value")
+      .withPersonal(new Personal()
+        .withEmail("test@test.com")
+        .withAdditionalProperty("additionalProperty", "value")
+        .withAddresses(Collections.singletonList(
+          new Address().withAdditionalProperty("additionalProperty", "value"))));
+
+    mockUserModule(mockRecipient.getId(), mockRecipient);
+    WireMock.stubFor(WireMock.post("/email")
+      .willReturn(WireMock.badRequest()));
+
+    Message emailChannel = new Message()
+      .withDeliveryChannel("email")
+      .withHeader("header1")
+      .withBody("body1")
+      .withOutputFormat(MediaType.TEXT_PLAIN);
+
+    Notification notification = new Notification()
+      .withNotificationId(UUID.randomUUID().toString())
+      .withRecipientUserId(mockRecipient.getId())
+      .withMessages(Arrays.asList(emailChannel));
+
+    RestAssured.given()
+      .spec(spec)
+      .header(mockUrlHeader)
+      .body(toJson(notification))
+      .when()
+      .post(MESSAGE_DELIVERY_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_NO_CONTENT);
+
+    WireMock.verify(1, WireMock.getRequestedFor(
+      WireMock.urlMatching("/users/" + mockRecipient.getId())));
+
+    mockRecipient = mockRecipient.withPersonal(null);
+    mockUserModule(mockRecipient.getId(), mockRecipient);
+
+    RestAssured.given()
+      .spec(spec)
+      .header(mockUrlHeader)
+      .body(toJson(notification))
+      .when()
+      .post(MESSAGE_DELIVERY_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_NO_CONTENT);
+  }
+
   private String toJson(Object object) {
     return JsonObject.mapFrom(object).toString();
   }
