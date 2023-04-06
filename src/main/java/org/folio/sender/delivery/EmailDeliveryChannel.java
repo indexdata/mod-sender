@@ -46,7 +46,7 @@ public class EmailDeliveryChannel implements DeliveryChannel {
 
       request.sendJson(emailEntity, response -> {
         if (response.failed()) {
-          LOG.error("deliverMessage:: Error from Email module {} ", response.cause().getMessage(), response.cause());
+          LOG.error("deliverMessage:: Error from Email module {} ", response.cause().getMessage());
         } else if (response.result().statusCode() != HttpStatus.SC_OK) {
           String errorMessage = String.format("deliverMessage:: Email module responded with status '%s' and body '%s'",
             response.result().statusCode(), response.result().bodyAsString());
