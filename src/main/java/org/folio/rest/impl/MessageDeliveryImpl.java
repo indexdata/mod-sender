@@ -42,8 +42,14 @@ public class MessageDeliveryImpl implements MessageDelivery {
       OkapiHeaders headers = new OkapiHeaders(okapiHeaders);
       headers.setTenant(tenantId);
       senderService.sendNotification(entity, headers)
-        .map(PostMessageDeliveryResponse::respond204WithTextPlain)
-        .map(Response.class::cast)
+        .map(x->{
+          System.out.println("x value" + x);
+          return PostMessageDeliveryResponse.respond204WithTextPlain("postMessageDelivery");
+        })
+        .map(x -> {
+          System.out.println("PostMessageDeliveryResponse "+ x);
+          return Response.class.cast(x);
+        })
         .otherwise(ExceptionHelper::handleException)
         .onComplete(asyncResultHandler);
     } catch (Exception e) {
