@@ -36,7 +36,7 @@ public class SenderServiceImpl implements SenderService {
     this.webClient = vertx.getOrCreateContext().get("webClient");
   }
 
-  public Future<User> sendNotification(Notification notification, OkapiHeaders okapiHeaders) {
+  public Future<Void> sendNotification(Notification notification, OkapiHeaders okapiHeaders) {
     log.debug("sendNotification:: notificationId {}, recipientUserId {}", notification.getNotificationId(), notification.getRecipientUserId());
     validateDeliveryChannels(notification.getMessages());
     return lookupUser(notification.getRecipientUserId(), okapiHeaders)
@@ -46,7 +46,7 @@ public class SenderServiceImpl implements SenderService {
           deliveryChannelProxy.deliverMessage(notification.getNotificationId(), JsonObject.mapFrom(user),
             JsonObject.mapFrom(message), JsonObject.mapFrom(okapiHeaders));
         }
-        return Future.succeededFuture(user);
+        return Future.succeededFuture();
       });
   }
 
