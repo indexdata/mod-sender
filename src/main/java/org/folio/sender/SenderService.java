@@ -2,6 +2,7 @@ package org.folio.sender;
 
 import io.vertx.core.Future;
 import org.folio.rest.jaxrs.model.Notification;
+import org.folio.rest.jaxrs.model.User;
 import org.folio.rest.model.OkapiHeaders;
 
 /**
@@ -15,6 +16,6 @@ public interface SenderService {
    * @param notification notification
    * @param okapiHeaders okapiHeaders
    */
-  Future<Void> sendNotification(Notification notification, OkapiHeaders okapiHeaders);
+  Future<User> sendNotification(Notification notification, OkapiHeaders okapiHeaders);
 
 }
