@@ -1,3 +1,9 @@
+## 2023-10-11 v1.11.0
+* Logging improvement (MODSENDER-48)
+* Update copyright year (FOLIO-1021)
+* Use GitHub Workflows api-lint and api-schema-lint and api-doc (FOLIO-3678)
+* Update to Java 17 (MODSENDER-61)
+
 ## 2023-02-23 v1.10.0
 * Logging improvement - added log4j configuration (MODSENDER-57)
 
