@@ -79,7 +79,6 @@ public class MessageDeliveryTest {
     vertx.close(context.asyncAssertSuccess());
   }
 
-
   @Test
   public void shouldReturn422WhenInvalidBody() {
     JsonObject emptyBody = new JsonObject();
@@ -153,6 +152,116 @@ public class MessageDeliveryTest {
 
     WireMock.verify(1, WireMock.getRequestedFor(
       WireMock.urlMatching("/users/" + mockRecipient.getId())));
+  }
+
+  @Test
+  public void shouldReturnNoContentAndSendMailWhenRequestIsValid() {
+    User mockRecipient = new User()
+      .withId(UUID.randomUUID().toString())
+      .withPersonal(new Personal().withEmail("test@test.com"));
+
+    mockUserModule(mockRecipient.getId(), mockRecipient);
+    mockMailModule();
+
+    Message mailChannel1 = new Message()
+      .withDeliveryChannel("mail")
+      .withHeader("header1")
+      .withBody("body1")
+      .withOutputFormat(MediaType.TEXT_PLAIN);
+    Message mailChannel2 = new Message()
+      .withDeliveryChannel("mail")
+      .withHeader("header2")
+      .withBody("body2")
+      .withOutputFormat(MediaType.TEXT_HTML);
+
+    Notification notification = new Notification()
+      .withNotificationId(UUID.randomUUID().toString())
+      .withRecipientUserId(mockRecipient.getId())
+      .withMessages(Arrays.asList(mailChannel1, mailChannel2));
+
+    RestAssured.given()
+      .spec(spec)
+      .header(mockUrlHeader)
+      .body(toJson(notification))
+      .when()
+      .post(MESSAGE_DELIVERY_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_NO_CONTENT);
+
+    WireMock.verify(1, WireMock.getRequestedFor(
+      WireMock.urlMatching("/users/" + mockRecipient.getId())));
+    WireMock.verify(2, WireMock.postRequestedFor(
+      WireMock.urlMatching("/mail")));
+  }
+
+  @Test
+  public void shouldReturnNoContentWhenFailedToSend() {
+    User mockRecipient = new User()
+      .withId(UUID.randomUUID().toString())
+      .withPersonal(new Personal().withEmail("test@test.com"));
+
+    mockUserModule(mockRecipient.getId(), mockRecipient);
+    WireMock.stubFor(WireMock.post("/mail").willReturn(WireMock.forbidden()));
+
+    Message mailChannel1 = new Message()
+      .withDeliveryChannel("mail")
+      .withHeader("header1")
+      .withBody("body1")
+      .withOutputFormat(MediaType.TEXT_PLAIN);
+
+    Notification notification = new Notification()
+      .withNotificationId(UUID.randomUUID().toString())
+      .withRecipientUserId(mockRecipient.getId())
+      .withMessages(Collections.singletonList(mailChannel1));
+
+    RestAssured.given()
+      .spec(spec)
+      .header(mockUrlHeader)
+      .body(toJson(notification))
+      .when()
+      .post(MESSAGE_DELIVERY_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_NO_CONTENT);
+
+    WireMock.verify(1, WireMock.getRequestedFor(
+      WireMock.urlMatching("/users/" + mockRecipient.getId())));
+    WireMock.verify(1, WireMock.postRequestedFor(
+      WireMock.urlMatching("/mail")));
+  }
+
+  @Test
+  public void shouldReturnNoContentWhenUnexpectedReturnCode() {
+    User mockRecipient = new User()
+      .withId(UUID.randomUUID().toString())
+      .withPersonal(new Personal().withEmail("test@test.com"));
+
+    mockUserModule(mockRecipient.getId(), mockRecipient);
+    WireMock.stubFor(WireMock.post("/mail").willReturn(WireMock.created()));
+
+    Message mailChannel1 = new Message()
+      .withDeliveryChannel("mail")
+      .withHeader("header1")
+      .withBody("body1")
+      .withOutputFormat(MediaType.TEXT_PLAIN);
+
+    Notification notification = new Notification()
+      .withNotificationId(UUID.randomUUID().toString())
+      .withRecipientUserId(mockRecipient.getId())
+      .withMessages(Collections.singletonList(mailChannel1));
+
+    RestAssured.given()
+      .spec(spec)
+      .header(mockUrlHeader)
+      .body(toJson(notification))
+      .when()
+      .post(MESSAGE_DELIVERY_PATH)
+      .then()
+      .statusCode(HttpStatus.SC_NO_CONTENT);
+
+    WireMock.verify(1, WireMock.getRequestedFor(
+      WireMock.urlMatching("/users/" + mockRecipient.getId())));
+    WireMock.verify(1, WireMock.postRequestedFor(
+      WireMock.urlMatching("/mail")));
   }
 
   @Test
@@ -257,6 +366,11 @@ public class MessageDeliveryTest {
 
   private void mockEmailModule() {
     WireMock.stubFor(WireMock.post("/email")
+      .willReturn(WireMock.ok()));
+  }
+
+  private void mockMailModule() {
+    WireMock.stubFor(WireMock.post("/mail")
       .willReturn(WireMock.ok()));
   }
 
