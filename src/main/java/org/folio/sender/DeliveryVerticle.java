@@ -8,6 +8,7 @@ import io.vertx.core.shareddata.LocalMap;
 import io.vertx.serviceproxy.ServiceBinder;
 import org.folio.sender.delivery.DeliveryChannel;
 import org.folio.sender.delivery.EmailDeliveryChannel;
+import org.folio.sender.delivery.MailDeliveryChannel;
 
 public class DeliveryVerticle extends AbstractVerticle {
 
@@ -17,6 +18,8 @@ public class DeliveryVerticle extends AbstractVerticle {
   public void start(Promise<Void> startPromise) throws Exception {
     registerDeliveryChannel("email", "delivery-channel.email.queue", vertx,
       new EmailDeliveryChannel(vertx, "/email"));
+    registerDeliveryChannel("mail", "delivery-channel.mail.queue", vertx,
+      new MailDeliveryChannel(vertx, "/mail"));
 
     startPromise.handle(Future.succeededFuture());
   }

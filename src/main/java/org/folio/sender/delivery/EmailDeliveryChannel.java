@@ -32,19 +32,14 @@ public class EmailDeliveryChannel implements DeliveryChannel {
                              JsonObject message, JsonObject okapiHeadersJson) {
     LOG.debug("deliverMessage:: Sending message to recipient {} with message {}", recipientJson, message);
     try {
-      User recipient = recipientJson.mapTo(User.class);
-      EmailEntity emailEntity = message.mapTo(EmailEntity.class);
-      emailEntity.setNotificationId(notificationId);
-      emailEntity.setTo(recipient.getPersonal().getEmail());
+        User recipient = recipientJson.mapTo(User.class);
+        EmailEntity emailEntity = message.mapTo(EmailEntity.class);
+        emailEntity.setNotificationId(notificationId);
+        emailEntity.setTo(recipient.getPersonal().getEmail());
 
-      OkapiHeaders okapiHeaders = okapiHeadersJson.mapTo(OkapiHeaders.class);
-      String url = okapiHeaders.getOkapiUrl() + emailUrlPath;
-      HttpRequest<Buffer> request = webClient.postAbs(url);
-      okapiHeaders.fillRequestHeaders(request.headers());
-      request.putHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
-      request.putHeader(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN);
+        HttpRequest<Buffer> request = createRequestAndPrepareHeaders(okapiHeadersJson, emailUrlPath, webClient);
 
-      request.sendJson(emailEntity, response -> {
+        request.sendJson(emailEntity, response -> {
         if (response.failed()) {
           LOG.error("deliverMessage:: Error from Email module {} ", response.cause().getMessage());
         } else if (response.result().statusCode() != HttpStatus.SC_OK) {
@@ -56,5 +51,15 @@ public class EmailDeliveryChannel implements DeliveryChannel {
     } catch (Exception e) {
       LOG.error("deliverMessage:: Error while attempting to deliver message to recipient {} ", recipientJson, e);
     }
+  }
+
+  static HttpRequest<Buffer> createRequestAndPrepareHeaders(JsonObject okapiHeadersJson, String urlPath, WebClient webClient) {
+    OkapiHeaders okapiHeaders = okapiHeadersJson.mapTo(OkapiHeaders.class);
+    String requestUrl = okapiHeaders.getOkapiUrl() + urlPath;
+    HttpRequest<Buffer> request = webClient.postAbs(requestUrl);
+    okapiHeaders.fillRequestHeaders(request.headers());
+    request.putHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+    request.putHeader(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN + "," + MediaType.APPLICATION_JSON);
+    return request;
   }
 }

@@ -9,6 +9,10 @@
     {
       "id" : "email",
       "version" : "1.1"
+    },
+    {
+      "id" : "batch-print",
+      "version" : "1.0"
     }
   ],
   "provides": [
@@ -20,7 +24,7 @@
           "methods": ["POST"],
           "pathPattern": "/message-delivery",
           "permissionsRequired": ["sender.message-delivery"],
-          "modulePermissions": ["email.message.post", "users.item.get" ]
+          "modulePermissions": ["email.message.post", "mod-batch-print.entries.mail.post", "users.item.get" ]
         }
       ]
     }
