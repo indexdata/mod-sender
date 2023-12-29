@@ -24,7 +24,9 @@
           "methods": ["POST"],
           "pathPattern": "/message-delivery",
           "permissionsRequired": ["sender.message-delivery"],
-          "modulePermissions": ["email.message.post", "batch-print.entries.mail.post", "users.item.get" ]
+          "modulePermissions": [
+            "email.message.post", "mod-batch-print.entries.mail.post", "users.item.get"
+          ]
         }
       ]
     }
